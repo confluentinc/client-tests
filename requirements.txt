@@ -1,0 +1,3 @@
+trivup
+confluent_kafka
+apscheduler
