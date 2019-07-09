@@ -70,9 +70,14 @@ class KafkaCluster(object):
                                 self.cluster.name,
                                 self.cluster.instance_path()))
 
-    def stop(self):
+    def stop(self, cleanup=True):
         self.cluster.stop()
-        self.cluster.cleanup(keeptypes=['log'])
+        if cleanup:
+            self.cluster.cleanup(keeptypes=['log'])
+
+    def stopped(self):
+        """ Returns True when all components of the cluster are stopped """
+        return len([x for x in self.cluster.apps if x.status() == 'stopped']) == len(self.cluster.apps)
 
     def stop_broker(self, broker_id):
         broker = self.brokers.get(broker_id, None)
