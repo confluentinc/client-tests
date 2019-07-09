@@ -21,7 +21,7 @@ from trivup.apps.KafkaBrokerApp import KafkaBrokerApp
 
 
 class KafkaCluster(object):
-    def __init__(self, broker_cnt=3, kafka_version='2.0.0'):
+    def __init__(self, broker_cnt=3, kafka_version='2.3.0'):
         super(KafkaCluster, self).__init__()
 
         self.cluster = Cluster('KafkaCluster',
