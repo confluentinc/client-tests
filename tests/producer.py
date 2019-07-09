@@ -150,3 +150,25 @@ class RateProducer(object):
                               format(self.topic, cm))
         return {x: y.leader for x, y in
                 cm.topics[self.topic].partitions.iteritems()}
+
+
+def simple_produce_messages(cluster, topic, count, partition=None,
+                            value_format="msg-{}"):
+    """ Produce count messages to topic """
+    conf = cluster.client_config()
+    conf.update({'linger.ms': 5})
+
+    p = confluent_kafka.Producer(conf)
+    for n in range(0, count):
+        while True:
+            try:
+                p.produce(topic=topic, partition=partition,
+                          value=value_format.format(n))
+                break
+            except BufferError:
+                p.poll(1)
+                continue
+    p.flush(30)
+
+    print("Produced {} messages to {} [{}]".format(count, topic, partition))
+
